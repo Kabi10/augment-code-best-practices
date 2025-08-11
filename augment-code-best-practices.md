@@ -317,6 +317,125 @@ You: "That sounds good, but I'm also concerned about memory usage on older devic
 Me: [Addresses memory concerns] "Let me show you how to implement proper image caching with Glide, optimize bitmap loading, and add memory pressure handling..."
 ```
 
+## 🚨 Deployment Issue Analysis: Next.js AI Chatbot
+
+### **Problem Identified**
+Your Next.js AI chatbot deployment is failing because:
+
+1. **Build Script Issue**: `"build": "tsx lib/db/migrate && next build"` runs migrations during build
+2. **Missing Environment Variable**: `POSTGRES_URL` is not configured in Vercel deployment
+3. **Architecture Problem**: Database migrations should run at deployment time, not build time
+
+### **Immediate Solutions**
+
+#### **Option 1: Conditional Migration Script (Quick Fix)**
+```typescript
+// lib/db/migrate.ts - Modified version
+import { config } from 'dotenv';
+import { drizzle } from 'drizzle-orm/postgres-js';
+import { migrate } from 'drizzle-orm/postgres-js/migrator';
+import postgres from 'postgres';
+
+config({
+  path: '.env.local',
+});
+
+const runMigrate = async () => {
+  // Skip migrations in build environment if POSTGRES_URL is not available
+  if (!process.env.POSTGRES_URL) {
+    if (process.env.NODE_ENV === 'production' && process.env.VERCEL) {
+      console.log('⏭️ Skipping migrations in build environment');
+      process.exit(0);
+    }
+    throw new Error('POSTGRES_URL is not defined');
+  }
+
+  const connection = postgres(process.env.POSTGRES_URL, { max: 1 });
+  const db = drizzle(connection);
+
+  console.log('⏳ Running migrations...');
+
+  const start = Date.now();
+  await migrate(db, { migrationsFolder: './lib/db/migrations' });
+  const end = Date.now();
+
+  console.log('✅ Migrations completed in', end - start, 'ms');
+  process.exit(0);
+};
+
+runMigrate().catch((err) => {
+  console.error('❌ Migration failed');
+  console.error(err);
+  process.exit(1);
+});
+```
+
+#### **Option 2: Separate Build and Migration (Recommended)**
+```json
+// package.json - Updated scripts
+{
+  "scripts": {
+    "dev": "next dev --turbo",
+    "build": "next build",
+    "start": "next start",
+    "postbuild": "tsx lib/db/migrate",
+    "db:migrate": "tsx lib/db/migrate.ts"
+  }
+}
+```
+
+#### **Option 3: Environment-Specific Build**
+```json
+// package.json - Environment conditional
+{
+  "scripts": {
+    "build": "npm run build:check-env && next build",
+    "build:check-env": "node -e \"if(process.env.POSTGRES_URL) require('child_process').execSync('tsx lib/db/migrate', {stdio:'inherit'})\"",
+    "build:local": "tsx lib/db/migrate && next build"
+  }
+}
+```
+
+### **Vercel Configuration Steps**
+
+1. **Set Environment Variables in Vercel Dashboard:**
+   - Go to your project settings in Vercel
+   - Add `POSTGRES_URL` with your database connection string
+   - Add other required variables from `.env.example`
+
+2. **Database Setup Options:**
+   ```bash
+   # Option A: Use Vercel Postgres
+   vercel storage create postgres
+
+   # Option B: Use external database (Neon, Supabase, etc.)
+   # Add connection string to Vercel environment variables
+   ```
+
+3. **Deployment Commands:**
+   ```bash
+   # Deploy with environment variables
+   vercel --prod
+
+   # Or set variables via CLI
+   vercel env add POSTGRES_URL production
+   ```
+
+### **Best Practices for Next.js + Database Deployments**
+
+1. **Separate Concerns**: Keep build and runtime operations separate
+2. **Environment Variables**: Always configure in deployment platform
+3. **Migration Strategy**: Use deployment hooks or separate migration commands
+4. **Fallback Handling**: Gracefully handle missing environment variables
+5. **Database Initialization**: Use Vercel's database creation tools
+
+### **Quick Resolution Steps**
+
+1. **Immediate Fix**: Update migration script with conditional logic
+2. **Environment Setup**: Configure `POSTGRES_URL` in Vercel dashboard
+3. **Redeploy**: Push changes and redeploy
+4. **Verify**: Check deployment logs for successful migration
+
 ---
 
 *This guide was created to help developers maximize their productivity when working with Augment Code. Keep it handy as a reference for structuring effective requests and getting the best results from your AI coding assistant.*
