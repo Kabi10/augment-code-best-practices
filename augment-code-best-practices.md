@@ -159,6 +159,164 @@ Me: [Addresses concerns] "Let me show you how to implement connection pooling an
 
 Think of me as a knowledgeable pair programming partner who can understand your entire codebase and help you make informed decisions. Start with your goals, let me understand your context, and we'll iterate together to build the best solution.
 
+## Android Development Best Practices with Augment Code
+
+### 1. Structuring Requests for Android Codebases
+
+#### Android-Specific Request Structure
+- **Platform Context**: Mention target SDK, minimum SDK, and key libraries (Jetpack Compose, Room, Retrofit, etc.)
+- **Architecture Pattern**: Specify if using MVVM, MVP, Clean Architecture, or MVI
+- **Component Scope**: Identify whether it's Activity, Fragment, Service, or ViewModel related
+- **Performance Context**: Include device constraints, target user base, or performance requirements
+
+#### Well-Structured Android Request Examples
+
+**UI/Performance Optimization:**
+```
+I need to optimize the RecyclerView performance in my news feed Activity. The app targets API 21+ and uses MVVM with LiveData. Users are experiencing lag when scrolling through 100+ items with images loaded via Glide. The items contain text, images, and nested RecyclerViews for comments. I want to implement view recycling optimizations and image loading improvements.
+```
+
+**Architecture Refactoring:**
+```
+I want to migrate my existing Activities to use Jetpack Compose while maintaining the current MVVM architecture. The app has 8 main screens using traditional XML layouts with ViewBinding, Room database, and Retrofit for networking. I need to preserve existing business logic in ViewModels and ensure smooth data flow with Compose state management.
+```
+
+**Memory/Lifecycle Issues:**
+```
+My app is experiencing memory leaks in the ProfileFragment when users navigate back and forth. The fragment uses Glide for image loading, has a WebView for displaying content, and subscribes to location updates. I'm seeing increasing memory usage in Android Studio profiler, particularly around bitmap allocations and listener registrations.
+```
+
+### 2. Android-Specific Tasks Augment Code Excels At
+
+#### Core Android Strengths
+- **Performance Optimization**: RecyclerView efficiency, image loading, memory management, ANR prevention
+- **Architecture Migration**: Moving to MVVM, implementing Clean Architecture, Jetpack Compose migration
+- **Lifecycle Management**: Fragment/Activity lifecycle issues, ViewModel scoping, memory leak prevention
+- **UI/UX Enhancement**: Material Design implementation, responsive layouts, accessibility improvements
+- **Security Implementation**: Secure storage, network security, biometric authentication, ProGuard/R8 optimization
+- **Testing Strategy**: Unit testing with Mockito, UI testing with Espresso, integration testing approaches
+
+#### Android Framework Expertise
+- **Jetpack Components**: Navigation, Room, WorkManager, Paging, DataStore, Compose
+- **Background Processing**: Services, JobScheduler, WorkManager, Foreground services
+- **Data Management**: Room migrations, SharedPreferences to DataStore migration, caching strategies
+- **Networking**: Retrofit optimization, OkHttp configuration, offline-first architecture
+- **Security**: Keystore usage, certificate pinning, obfuscation, secure coding practices
+
+### 3. Providing Android Context Effectively
+
+#### Essential Android Context Elements
+- **App Architecture**: "Using MVVM with Repository pattern, Dagger Hilt for DI"
+- **Key Dependencies**: "Retrofit 2.9, Room 2.4, Compose 1.3, Glide 4.14"
+- **Target Specifications**: "minSdk 21, targetSdk 33, supports tablets and phones"
+- **Performance Constraints**: "Targeting mid-range devices, 2GB RAM minimum"
+- **Business Context**: "E-commerce app with 50k+ products, offline-first requirement"
+
+#### Android-Specific Context Examples
+```
+Good: "The app crashes when rotating the device"
+Better: "The app crashes with IllegalStateException during configuration changes in the CheckoutActivity when users have items in cart and rotate from portrait to landscape"
+
+Good: "The RecyclerView is slow"
+Better: "The product listing RecyclerView with 500+ items shows frame drops (>16ms) during scroll, particularly when loading product images via Glide. Using LinearLayoutManager with default item animator."
+```
+
+### 4. Leveraging Codebase Retrieval for Android Projects
+
+#### Android-Specific Retrieval Patterns
+- "Show me how data flows from Repository to UI in this MVVM setup"
+- "Find all places where we handle configuration changes"
+- "How is dependency injection configured with Dagger/Hilt?"
+- "Where are we managing Fragment transactions and backstack?"
+- "Show me the current Room database schema and migration strategy"
+
+#### Architecture Understanding Queries
+- "Help me understand the navigation flow between main app sections"
+- "How is error handling implemented across different layers?"
+- "Where are we performing background tasks and how are they managed?"
+- "Show me how we're handling permissions and runtime permission requests"
+
+### 5. Iterating on Android-Specific Solutions
+
+#### Android Development Iteration Process
+1. **Analyze**: "Help me understand why this Fragment is leaking memory"
+2. **Plan**: "What's the best approach to implement offline-first for this feature?"
+3. **Implement**: Start with core Android components (Activity, Fragment, ViewModel)
+4. **Test**: "Help me write Espresso tests for this user flow"
+5. **Optimize**: Address performance, memory usage, and battery optimization
+6. **Review**: "Review this implementation for Android best practices and security"
+
+#### Common Android Iteration Scenarios
+
+**Performance Issues:**
+- Share Android Studio profiler screenshots or memory dumps
+- Provide specific frame timing data or ANR traces
+- Include device specifications and testing conditions
+
+**Lifecycle Problems:**
+- Describe exact user actions that trigger the issue
+- Include relevant lifecycle method implementations
+- Share any crash logs with stack traces
+
+**UI/UX Improvements:**
+- Provide screenshots or screen recordings of current behavior
+- Describe target user experience and design requirements
+- Include accessibility and multi-device support needs
+
+### 6. Android-Specific Communication Patterns
+
+#### Effective Android Question Patterns
+
+**For Architecture Analysis:**
+- "How can I improve the data flow between my Repository and ViewModels?"
+- "What's the best way to handle configuration changes in this Activity?"
+- "How should I structure this feature to follow Clean Architecture principles?"
+
+**For Performance Optimization:**
+- "This RecyclerView is dropping frames during scroll - how can I optimize it?"
+- "My app's memory usage keeps growing - help me identify potential leaks"
+- "How can I reduce the app startup time from 3 seconds to under 1 second?"
+
+**For Modern Android Development:**
+- "Help me migrate this XML layout to Jetpack Compose"
+- "How should I implement this feature using the latest Jetpack libraries?"
+- "What's the best way to handle state management in Compose for this use case?"
+
+#### Android Framework Communication Tips
+- Use proper Android terminology (Activity, Fragment, ViewModel, LiveData, etc.)
+- Reference specific Jetpack components when relevant
+- Mention Android version constraints and backward compatibility needs
+- Include relevant build.gradle dependencies when discussing implementation
+
+### 7. Android-Specific Advanced Tips
+
+#### Leverage Android Expertise
+- Ask about Android-specific design patterns and architectural decisions
+- Get guidance on proper lifecycle management and memory optimization
+- Request security reviews focusing on Android-specific vulnerabilities
+- Seek advice on Play Store optimization and app bundle configuration
+
+#### Modern Android Development
+- Stay updated on latest Jetpack library recommendations
+- Get guidance on Kotlin coroutines and Flow usage patterns
+- Learn about Compose best practices and state management
+- Understand modern testing approaches with Jetpack testing libraries
+
+#### Example Android Interaction Flow
+```
+You: "My e-commerce app's product listing is slow and users are complaining about lag during scroll."
+
+Me: [Analyzes codebase] "I can see you're using a RecyclerView with complex item layouts and Glide for image loading. Let me examine your adapter implementation and image loading strategy..."
+
+You: "Yes, and we're loading high-resolution product images that sometimes take time to load."
+
+Me: [Provides optimization plan] "Here's a comprehensive approach: implement DiffUtil for efficient updates, optimize your ViewHolder pattern, add image placeholder/error states, and implement proper image sizing..."
+
+You: "That sounds good, but I'm also concerned about memory usage on older devices."
+
+Me: [Addresses memory concerns] "Let me show you how to implement proper image caching with Glide, optimize bitmap loading, and add memory pressure handling..."
+```
+
 ---
 
 *This guide was created to help developers maximize their productivity when working with Augment Code. Keep it handy as a reference for structuring effective requests and getting the best results from your AI coding assistant.*
